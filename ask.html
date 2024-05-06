@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Generation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='../static/ask.css') }}">
+    <style>
+        body {
+            background-image: url('../static/bgmi.png');
+            /* Adjust background properties as needed */
+            background-size: cover; /* Cover the entire container */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+        }
+    </style>
+</head>
+<body>
+    <h1>Tatkal Ask</h1>
+    <form action="/generate" method="post">
+        <label for="query">Enter anything related to Disaster Management..</label><br>
+        <input type="text" id="query" name="query" required><br>
+        <button type="submit">Generate</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.querySelector('form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const form = new FormData(this);
+            const response = await fetch('/generate', {
+                method: 'POST',
+                body: form
+            });
+            const text = await response.text();
+            document.getElementById('result').innerHTML = text;
+        });
+    </script>
+</body>
+</html>

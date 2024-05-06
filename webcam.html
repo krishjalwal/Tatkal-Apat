@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TATKAL Capture</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+
+        }
+
+        #video-container {
+            border: 2px solid #d1d5db;
+        }
+
+        #capture-btn {
+            background-color: #2563eb;
+        }
+
+        #capture-btn:hover {
+            background-color: #1e40af;
+        }
+
+        .footer {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body class="font-sans" style="background-image: url('../static/bg-img.jpg') ">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8  webfont"><span style="color: red;">TATKAL</span> <span style="color: #1e40af;">Capture</span></h1>
+        <div class="flex justify-center">
+            <div class="w-1/4 p-4 bg-gray-200 rounded-lg mr-4">
+                <h2 class="text-lg font-semibold mb-4">How to Use</h2>
+                <p class="text-gray-700">To capture a photo using your webcam, simply click the "Capture Photo" button below the video feed. Make sure your webcam is enabled and positioned properly.</p>
+            </div>
+            <div id="video-container" class="flex justify-center items-center mt-8 border-2 border-gray-300 rounded-lg shadow-md transition duration-300">
+                <video id="video" width="400" height="480" autoplay></video>
+            </div>
+            <div class="w-1/4 p-4 bg-gray-200 rounded-lg ml-4">
+                <h2 class="text-lg font-semibold mb-4">About</h2>
+                <p class="text-gray-700">TATKAL Capture is a simple web application that allows users to capture photos using their webcam. It's built using HTML, CSS, JavaScript, and the jQuery library.</p>
+            </div>
+        </div>
+        
+        <div class="flex justify-center mt-4">
+            <form action="/home">
+                <button id="capture-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 shadow-md">Capture Photo</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer text-center py-4">
+        <p class="text-sm">&copy; MAHA-DEVS 2024 TATKAL-APAT. All rights reserved.</p>
+    </div>
+    <canvas id="canvas" style="display: none;" width="640" height="480"></canvas>
+    <script>
+        $(document).ready(function() {
+            navigator.mediaDevices.getUserMedia({
+                    video: true
+                })
+                .then(function(stream) {
+                    var video = document.getElementById('video');
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    console.log("An error occurred: " + err);
+                });
+
+            $('#capture-btn').click(function() {
+                var video = document.getElementById('video');
+                var canvas = document.getElementById('canvas');
+                var context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                var dataURL = canvas.toDataURL('image/png');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/save_image",
+                    data: {
+                        image_base64: dataURL
+                    }
+                }).done(function(response) {
+                    console.log(response);
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.log("An error occurred: " + textStatus, errorThrown);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

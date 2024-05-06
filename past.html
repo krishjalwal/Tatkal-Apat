@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Earthquake Data's</title>
+    <link rel="stylesheet" href="../static/past.css">
+    <style>
+        body {
+            background-image: url('../static/bgmi2.png');
+            /* Adjust background properties as needed */
+            background-size: cover; /* Cover the entire container */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+        }
+    </style>
+</head>
+<body>
+    <h1>Get Last Earthquake Data</h1>
+    <form action="/earthquake" method="post">
+        <label for="latitude">Latitude:</label><br>
+        <input type="text" id="latitude" name="latitude" required><br><br>
+        <label for="longitude">Longitude:</label><br>
+        <input type="text" id="longitude" name="longitude" required><br><br>
+        <label for="radius">Search Radius (in kilometers):</label><br>
+        <input type="text" id="radius" name="radius" required><br><br>
+        <button type="submit">Get Last Earthquake</button>
+    </form>
+    <div id="earthquake-info"></div>
+</body>
+</html>
